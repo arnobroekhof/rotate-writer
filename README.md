@@ -67,6 +67,8 @@ func filewriting() {
 }
 ```
 
+### Azure Blob Storage
+
 ```go
 package examples
 
@@ -103,4 +105,4 @@ func filewriting() {
 - [ ] Implement compression
 - [ ] Implement custom rotation name instead of date
 - [ ] Create Examples
-- [ ] Use github actions for releases
+- [ ] Use github actions for releases and linting
