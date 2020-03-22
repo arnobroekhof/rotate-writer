@@ -106,3 +106,4 @@ func filewriting() {
 - [ ] Implement custom rotation name instead of date
 - [ ] Create Examples
 - [ ] Use github actions for releases and linting
+- [ ] Add Go Docs
