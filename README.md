@@ -11,6 +11,11 @@ currently rotate-writer supports 3 different writer targets
 
 ## Usage
 
+```shell script
+go get -u github.com/arnobroekhof/rotate-writer
+```
+
+
 ### File
 
 ```go

@@ -1,4 +1,4 @@
-module github.com/arnobroekhof/conveyance
+module github.com/arnobroekhof/rotate=writer
 
 go 1.14
 
