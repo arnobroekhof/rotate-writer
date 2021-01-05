@@ -1,4 +1,4 @@
-package file
+package files
 
 import (
 	"errors"
@@ -15,21 +15,21 @@ var (
 	bytesWritten    int
 )
 
-type RotateWriter struct {
+type FileSizeRotateWriter struct {
 	lock         sync.Mutex
 	filename     string   // should be set to the actual filename
 	rotationSize int      // rotation size in bytes
 	fp           *os.File // file handler
 }
 
-// NewFileRotateWriter makes a newFileRotateWriter RotateWriter. Return nil if error occurs during setup.
-func NewFileRotateWriter(filename string, rotationSize int) (*RotateWriter, error) {
+// NewFileSizeRotateWriter makes a newFileRotateWriter FileSizeRotateWriter. Return nil if error occurs during setup.
+func NewFileSizeRotateWriter(filename string, rotationSize int) (*FileSizeRotateWriter, error) {
 	// Check file before we initialize.
 	return newFileRotateWriter(filename, rotationSize)
 }
 
-func newFileRotateWriter(filename string, rotationSize int) (w *RotateWriter, err error) {
-	w = &RotateWriter{filename: filename, rotationSize: rotationSize}
+func newFileRotateWriter(filename string, rotationSize int) (w *FileSizeRotateWriter, err error) {
+	w = &FileSizeRotateWriter{filename: filename, rotationSize: rotationSize}
 
 	// Create a file.
 	w.fp, err = os.Create(w.filename)
@@ -41,7 +41,7 @@ func newFileRotateWriter(filename string, rotationSize int) (w *RotateWriter, er
 }
 
 // Write satisfies the io.Writer interface.
-func (w *RotateWriter) Write(output []byte) (int, error) {
+func (w *FileSizeRotateWriter) Write(output []byte) (int, error) {
 	w.lock.Lock()
 	defer w.lock.Unlock()
 
@@ -69,12 +69,12 @@ func (w *RotateWriter) Write(output []byte) (int, error) {
 	return write, nil
 }
 
-func (w *RotateWriter) Close() (err error) {
+func (w *FileSizeRotateWriter) Close() (err error) {
 	return w.fp.Close()
 }
 
 // Perform the actual act of rotating and re-opening / re-creating the file file.
-func (w *RotateWriter) Rotate() (err error) {
+func (w *FileSizeRotateWriter) Rotate() (err error) {
 
 	// close the current file
 	if w.fp != nil {
@@ -108,7 +108,7 @@ func (w *RotateWriter) Rotate() (err error) {
 }
 
 //nolint:unused
-func (w *RotateWriter) stream() (err error) {
+func (w *FileSizeRotateWriter) stream() (err error) {
 	// does nothing yes
 	return nil
 }
