@@ -3,6 +3,8 @@ name: Test
 on:
   pull_request:
   push:
+    tags-ignore:
+      - '**'
 
 jobs:
   goreleaser:
@@ -26,4 +28,3 @@ jobs:
       -
         name: Test
         run: make go/test
-        if: startsWith(github.ref, 'refs/tags/') == False
