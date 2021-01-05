@@ -3,8 +3,10 @@ name: Test
 on:
   pull_request:
   push:
+    tags:
+      - '!**'
 jobs:
-  goreleaser:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
