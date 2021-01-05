@@ -3,7 +3,7 @@ LINT_VERSION?="v1.34.1"
 
 
 .PHONY: go/test
-go/test: go/lint
+go/test:
 	go test -race -coverprofile=coverage.out  -v ./...
 
 .PHONY: go/lint
