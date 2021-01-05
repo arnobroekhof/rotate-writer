@@ -3,9 +3,6 @@ name: Test
 on:
   pull_request:
   push:
-    tags-ignore:
-      - 'v*'
-
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
