@@ -1,13 +1,17 @@
-clean:
-	rm -rvf vendor
-	rm -rvf bin/*
+GOPATH?=$(go env GOPATH)
+LINT_VERSION?="v1.34.1"
 
-test: lint
+
+.PHONY: go/test
+go/test:
 	go test -race -coverprofile=coverage.out  -v ./...
 
-lint:
-	golangci-lint run
+.PHONY: go/lint
+go/lint:
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH)/bin $(LINT_VERSION)
+	$(GOPATH)/bin/golangci-lint run -v ./...
 
-cover:
+.PHONY: go/cover
+go/cover:
 	go tool cover -html=coverage.out
 

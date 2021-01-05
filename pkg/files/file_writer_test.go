@@ -1,4 +1,4 @@
-package file
+package files
 
 import (
 	"io/ioutil"
@@ -22,7 +22,7 @@ func TestNewLogWriter(t *testing.T) {
 	testFile, err := ioutil.TempFile(tmpDir, "testfile")
 	assert.Nil(t, err)
 
-	rotateWriter, err := NewFileRotateWriter(testFile.Name(), 14)
+	rotateWriter, err := NewFileSizeRotateWriter(testFile.Name(), 14)
 	assert.Nil(t, err)
 
 	_, err = rotateWriter.Write([]byte(testString1))

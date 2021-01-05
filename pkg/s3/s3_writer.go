@@ -11,7 +11,7 @@ import (
 
 var bytesWritten int
 
-type S3Writer struct {
+type ObjectSizeRotateWriter struct {
 	lock            sync.Mutex
 	endpoint        string
 	objectName      string
@@ -29,12 +29,12 @@ type S3Writer struct {
 
 var waitGroup sync.WaitGroup
 
-func NewS3RotateWriter(endpoint, bucketName, objectName, objectExtension, location, accessKeyID, secretAcessKey string, useSSL bool, rotationSize int) (*S3Writer, error) {
+func NewS3RotateWriter(endpoint, bucketName, objectName, objectExtension, location, accessKeyID, secretAcessKey string, useSSL bool, rotationSize int) (*ObjectSizeRotateWriter, error) {
 	return newS3RotateWriter(endpoint, objectName, objectExtension, bucketName, location, accessKeyID, secretAcessKey, useSSL, rotationSize)
 }
 
-func newS3RotateWriter(endpoint, objectName, objectExtension, bucketName, location, accessKeyID, secretAcessKey string, useSSL bool, rotationSize int) (w *S3Writer, err error) {
-	w = &S3Writer{
+func newS3RotateWriter(endpoint, objectName, objectExtension, bucketName, location, accessKeyID, secretAcessKey string, useSSL bool, rotationSize int) (w *ObjectSizeRotateWriter, err error) {
+	w = &ObjectSizeRotateWriter{
 		endpoint:        endpoint,
 		objectName:      objectName,
 		bucketName:      bucketName,
@@ -73,7 +73,7 @@ func newS3RotateWriter(endpoint, objectName, objectExtension, bucketName, locati
 	return w, nil
 }
 
-func (w *S3Writer) Write(output []byte) (int, error) {
+func (w *ObjectSizeRotateWriter) Write(output []byte) (int, error) {
 	w.lock.Lock()
 	defer w.lock.Unlock()
 
@@ -95,7 +95,7 @@ func (w *S3Writer) Write(output []byte) (int, error) {
 	return w.pipeWriter.Write(output)
 }
 
-func (w *S3Writer) stream() (err error) {
+func (w *ObjectSizeRotateWriter) stream() (err error) {
 	waitGroup.Add(1)
 	defer w.pipeReader.Close()
 	_, err = w.minioClient.PutObject(w.bucketName, fmt.Sprintf("%s%s", w.objectName, w.objectExtension), w.pipeReader, -1, minio.PutObjectOptions{
@@ -107,14 +107,14 @@ func (w *S3Writer) stream() (err error) {
 	return err
 }
 
-func (w *S3Writer) Close() (err error) {
+func (w *ObjectSizeRotateWriter) Close() (err error) {
 	err = w.pipeWriter.Close()
 	// wait until the pipe is closed before proceeding
 	waitGroup.Wait()
 	return err
 }
 
-func (w *S3Writer) Rotate() (err error) {
+func (w *ObjectSizeRotateWriter) Rotate() (err error) {
 
 	if w.pipeWriter != nil {
 		_ = w.pipeWriter.Close()
