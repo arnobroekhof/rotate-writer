@@ -27,8 +27,3 @@ jobs:
         name: Test
         run: make go/test
         if: !(startsWith(github.ref, 'refs/tags/'))
-        with:
-          version: latest
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
