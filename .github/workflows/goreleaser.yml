@@ -19,8 +19,10 @@ jobs:
         with:
           go-version: 1.15
       -
-        name: Go lint
-        run: make go/lint
+        name: Run Linter
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.34.1
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
